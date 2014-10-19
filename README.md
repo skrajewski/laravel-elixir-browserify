@@ -5,7 +5,7 @@ Simple extension to *laravel elixir* to build javascript bundle with *browserify
 ## Install
 
 ```
-npm install --save laravel-elixir-browserify
+npm install --save-dev laravel-elixir-browserify
 ```
 
 ## Usage
