@@ -8,10 +8,10 @@ var gulp = require('gulp'),
     elixir = require('laravel-elixir'),
     _ = require('underscore');
 
-elixir.extend('browserify', function(src, output, options) {
+elixir.extend('browserify', function (src, output, options) {
 
     var config = this,
-        baseDir = config.preprocessors.baseDir + 'scripts',
+        baseDir = config.preprocessors.baseDir + 'js',
         defaultOptions;
 
     defaultOptions = {
@@ -24,8 +24,8 @@ elixir.extend('browserify', function(src, output, options) {
 
     options = _.extend(defaultOptions, options);
 
-    gulp.task('browserify', function() {
-        var onError = function(err) {
+    gulp.task('browserify', function () {
+        var onError = function (err) {
             notify.onError({
                 title:    "Laravel Elixir",
                 subtitle: "Browserify Compilation Failed!",
