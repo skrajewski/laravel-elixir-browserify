@@ -1,4 +1,4 @@
-# laravel-elixir-browserify 0.1.0
+# laravel-elixir-browserify
 
 Simple extension to *laravel elixir* to build javascript bundle with *browserify*.
 
@@ -22,7 +22,7 @@ elixir(function(mix) {
 });
 ```
 
-First argument is the entry point of your application _(default directory is resources/app)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. Default configuration has **debowerify** transform support. In production bundle will be compressed.
+First argument is the entry point of your application _(default directory is resources/js)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. Default configuration has **debowerify** transform support. In production bundle will be compressed.
 
 #### Advanced example
 
