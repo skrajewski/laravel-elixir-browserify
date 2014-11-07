@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 elixir.extend('browserify', function (src, output, options) {
 
     var config = this,
-        baseDir = config.preprocessors.baseDir + 'js',
+        baseDir = config.assetsDir + 'js',
         defaultOptions;
 
     defaultOptions = {
