@@ -11,18 +11,18 @@ var gulp = require('gulp'),
 elixir.extend('browserify', function (src, output, options) {
 
     var config = this,
-        baseDir = config.assetsDir + 'js',
         defaultOptions;
 
     defaultOptions = {
+        baseDir: config.assetsDir + 'js',
         transform: ['debowerify'],
         insertGlobals: false,
         debug: !config.production
     };
 
-    src = this.buildGulpSrc(src, baseDir, '**/*.js');
-
     options = _.extend(defaultOptions, options);
+
+    src = this.buildGulpSrc(src, options.baseDir, '**/*.js');
 
     gulp.task('browserify', function () {
         var onError = function (err) {
@@ -35,7 +35,7 @@ elixir.extend('browserify', function (src, output, options) {
 
             this.emit('end');
         };
-        
+
         return gulp.src(src)
             .pipe(browserify(options)).on('error', onError)
             .pipe(gulpif(config.production, uglify()))
