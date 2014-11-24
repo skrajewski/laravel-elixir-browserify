@@ -14,7 +14,7 @@ elixir.extend('browserify', function (src, output, options) {
         defaultOptions;
 
     defaultOptions = {
-        baseDir = config.assetsDir + 'js',
+        baseDir: config.assetsDir + 'js',
         transform: ['debowerify'],
         insertGlobals: false,
         debug: !config.production
