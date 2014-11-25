@@ -3,14 +3,15 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
-    gulpif = require('gulp-if'),
+    plugins = require('gulp-load-plugins')(),
     debowerify = require('debowerify'),
     elixir = require('laravel-elixir'),
     _ = require('underscore'),
-    utilities = require('laravel-elixir/ingredients/helpers/utilities');
+    utilities = require('laravel-elixir/ingredients/helpers/utilities'),
+    config = require('laravel-elixir').config;
 
 
-elixir.extend('browserify', function (src, output, options) {
+elixir.extend('browserify', function (src, outputDir, options) {
 
     var config = this,
         baseDir = config.assetsDir + 'js',
@@ -37,16 +38,15 @@ elixir.extend('browserify', function (src, output, options) {
 
             this.emit('end');
         };
-        
+
         return gulp.src(src)
             .pipe(browserify(options)).on('error', onError)
-            .pipe(gulpif(config.production, uglify()))
-            .pipe(gulpif(config.production, rename('bundle.min.js'), rename("bundle.js")))
-            .pipe(gulp.dest(output || config.jsOutput))
+            .pipe(plugins.if(config.production, uglify()))
+            .pipe(gulp.dest(options.output || config.cssOutput))
             .pipe(notify({
                 title: 'Laravel Elixir',
                 message: 'Browserify Compiled!',
-                icon: __dirname + '/../laravel-elixir/icons/laravel.png',
+                icon: __dirname + '/../laravel-elixir/icons/laravel.png'
             }));
     });
 
