@@ -6,7 +6,9 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     debowerify = require('debowerify'),
     elixir = require('laravel-elixir'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    utilities = require('laravel-elixir/ingredients/helpers/utilities');
+
 
 elixir.extend('browserify', function (src, output, options) {
 
@@ -20,7 +22,7 @@ elixir.extend('browserify', function (src, output, options) {
         debug: !config.production
     };
 
-    src = this.buildGulpSrc(src, baseDir, '**/*.js');
+    src = utilities.buildGulpSrc(src, baseDir, '**/*.js');
 
     options = _.extend(defaultOptions, options);
 
