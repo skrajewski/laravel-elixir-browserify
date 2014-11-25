@@ -1,14 +1,12 @@
 var gulp = require('gulp'),
-    notify = require('gulp-notify'),
-    browserify = require('gulp-browserify'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
-    gulpif = require('gulp-if'),
-    debowerify = require('debowerify'),
+    plugins = require('gulp-load-plugins')(),
     elixir = require('laravel-elixir'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    utilities = require('laravel-elixir/ingredients/helpers/utilities'),
+    config = require('laravel-elixir').config;
 
-elixir.extend('browserify', function (src, output, options) {
+
+elixir.extend('browserify', function (src, outputDir, options) {
 
     var config = this,
         baseDir = config.assetsDir + 'js',
@@ -20,13 +18,13 @@ elixir.extend('browserify', function (src, output, options) {
         debug: !config.production
     };
 
-    src = this.buildGulpSrc(src, baseDir, '**/*.js');
+    src = utilities.buildGulpSrc(src, baseDir, '**/*.js');
 
     options = _.extend(defaultOptions, options);
 
     gulp.task('browserify', function () {
         var onError = function (err) {
-            notify.onError({
+            plugins.notify.onError({
                 title:    "Laravel Elixir",
                 subtitle: "Browserify Compilation Failed!",
                 message:  "Error: <%= error.message %>",
@@ -35,16 +33,15 @@ elixir.extend('browserify', function (src, output, options) {
 
             this.emit('end');
         };
-        
+
         return gulp.src(src)
-            .pipe(browserify(options)).on('error', onError)
-            .pipe(gulpif(config.production, uglify()))
-            .pipe(gulpif(config.production, rename('bundle.min.js'), rename("bundle.js")))
-            .pipe(gulp.dest(output || config.jsOutput))
-            .pipe(notify({
+            .pipe(plugins.browserify(options)).on('error', onError)
+            .pipe(plugins.if(config.production, plugins.uglify()))
+            .pipe(gulp.dest(options.output || config.cssOutput))
+            .pipe(plugins.notify({
                 title: 'Laravel Elixir',
                 message: 'Browserify Compiled!',
-                icon: __dirname + '/../laravel-elixir/icons/laravel.png',
+                icon: __dirname + '/../laravel-elixir/icons/laravel.png'
             }));
     });
 
