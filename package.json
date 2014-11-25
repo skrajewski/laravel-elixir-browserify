@@ -1,0 +1,44 @@
+{
+  "name": "laravel-elixir-browserify",
+  "version": "0.2.0",
+  "description": "Laravel Elixir Browserify Extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "laravel",
+    "elixir",
+    "browserify",
+    "gulp"
+  ],
+  "author": {
+    "name": "Szymon Krajewski"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "debowerify": "^0.9.1",
+    "gulp-browserify": "^0.5.0",
+    "gulp-if": "^1.2.5",
+    "gulp-notify": "^2.0.0",
+    "gulp-load-plugins": "^0.7.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.0.1",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szykra/laravel-elixir-browserify"
+  },
+  "bugs": {
+    "url": "https://github.com/szykra/laravel-elixir-browserify/issues"
+  },
+  "homepage": "https://github.com/szykra/laravel-elixir-browserify",
+  "readme": "# laravel-elixir-browserify\n\nSimple extension to *laravel elixir* to build javascript bundle with *browserify*.\n\n## Install\n\n```\nnpm install --save-dev laravel-elixir-browserify\n```\n\n## Usage\n\n### Example *Gulpfile*:\n\n```javascript\nvar elixir = require('laravel-elixir');\n\nrequire('laravel-elixir-browserify');\n\nelixir(function(mix) {\n    mix.browserify(\"bootstrap.js\");\n});\n```\n\nFirst argument is the entry point of your application _(default directory is resources/js)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. Default configuration has **debowerify** transform support. In production bundle will be compressed.\n\n#### Advanced example\n\n```javascript\nelixir(function(mix) {\n    mix.browserify(\"bootstrap.js\", \"public/js\", {debug: true, insertGlobals: true});\n});\n```\n",
+  "readmeFilename": "README.md",
+  "_id": "laravel-elixir-browserify@0.2.0",
+  "_shasum": "002938a6a1a6ce3b6b9214eb8039016223a2622b",
+  "_resolved": "git+http://github.com/rynocouse/laravel-elixir-browserify.git#7d7610233f7239960f16012ba4d7391bb0b6fe53",
+  "_from": "laravel-elixir-browserify@git+http://github.com/rynocouse/laravel-elixir-browserify.git"
+}
