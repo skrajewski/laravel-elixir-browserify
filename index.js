@@ -37,7 +37,7 @@ elixir.extend('browserify', function (src, outputDir, options) {
         return gulp.src(src)
             .pipe(plugins.browserify(options)).on('error', onError)
             .pipe(plugins.if(config.production, plugins.uglify()))
-            .pipe(gulp.dest(options.output || config.cssOutput))
+            .pipe(gulp.dest(options.output || config.jsOutput))
             .pipe(plugins.notify({
                 title: 'Laravel Elixir',
                 message: 'Browserify Compiled!',
