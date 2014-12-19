@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
     elixir = require('laravel-elixir'),
     _ = require('underscore'),
-    utilities = require('laravel-elixir/ingredients/helpers/utilities'),
+    utilities = require('laravel-elixir/ingredients/helpers/Utilities'),
     config = require('laravel-elixir').config;
 
 
