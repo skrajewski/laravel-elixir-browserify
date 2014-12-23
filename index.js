@@ -1,41 +1,49 @@
 var gulp = require('gulp'),
-    elixir = require('laravel-elixir'),
-    plugins = require('gulp-load-plugins')(),
-    _ = require('underscore'),
+    elixir  = require('laravel-elixir'),
+    gulpIf = require('gulp-if'),
+    browserify = require('browserify'),
+    uglify  = require('gulp-uglify'),
+    rename  = require('gulp-rename'),
+    transform = require('vinyl-transform'),
+    _  = require('underscore'),
     utilities = require('laravel-elixir/ingredients/helpers/Utilities'),
-    notifications= require('laravel-elixir/ingredients/helpers/Notification');
+    notifications = require('laravel-elixir/ingredients/helpers/Notification');
 
 elixir.extend('browserify', function (src, outputDir, options) {
 
     var config = this,
-        baseDir = config.assetsDir + 'js',
-        defaultOptions;
+        defaultOptions = {
+            debug:         ! config.production,
+            rename:        "bundle.js",
+            srcDir:        config.assetsDir + 'js',
+            output:        outputDir || config.jsOutput,
+            transform:     ['debowerify'],
+            insertGlobals: false,
+        };
 
-    defaultOptions = {
-        transform: ['debowerify'],
-        insertGlobals: false,
-        debug: !config.production
-    };
-
-    src = utilities.buildGulpSrc(src, baseDir, '**/*.js');
     options = _.extend(defaultOptions, options);
+    src = utilities.buildGulpSrc(src, options.srcDir, '**/*.js');
 
     gulp.task('browserify', function () {
 
         var onError = function(e) {
-            new notification().error(e, 'Browserify Compilation Failed!');
+            new notifications().error(e, 'Browserify Compilation Failed!');
             this.emit('end');
         };
 
+        var browserified = transform(function(filename) {
+            var b = browserify(filename);
+            return b.bundle();
+        });
+
         return gulp.src(src)
-            .pipe(plugins.browserify(options)).on('error', onError)
-            .pipe(plugins.if(config.production, plugins.uglify()))
-            .pipe(gulp.dest(options.output || config.jsOutput))
-            .pipe(new notification().message('Browserified Compiled!'));
+            .pipe(browserified).on('error', onError)
+            .pipe(gulpIf(! options.debug, uglify()))
+            .pipe(rename(options.rename))
+            .pipe(gulp.dest(options.output))
+            .pipe(new notifications().message('Browserified!'));
     });
 
-    this.registerWatcher('browserify', baseDir + '/**/*.js');
-
+    this.registerWatcher('browserify', options.srcDir + '/**/*.js');
     return this.queueTask('browserify');
-
 });
