@@ -10,7 +10,7 @@ npm install --save-dev laravel-elixir-browserify
 
 ## Usage
 
-### Example *Gulpfile*:
+### Example *Gulpfile.js*:
 
 ```javascript
 var elixir = require('laravel-elixir');
@@ -22,12 +22,23 @@ elixir(function(mix) {
 });
 ```
 
-First argument is the entry point of your application _(default directory is resources/assets/js)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. Default configuration has **debowerify** transform support. In production bundle will be compressed.
+First argument is the entry point of your application _(default directory is resources/assets/js)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. In production bundle will be compressed.
 
 #### Advanced example
 
 ```javascript
+var elixir = require('laravel-elixir'),
+	debowerify = require('debowerify');
+
+require('laravel-elixir-browserify');
+
 elixir(function(mix) {
-    mix.browserify("bootstrap.js", "public/js", {debug: true, insertGlobals: true});
+    mix.browserify("bootstrap.js", "public/js", {debug: true, insertGlobals: true, transform: [debowerify]});
 });
 ```
+
+## Changelog
+
+__0.4.0__
+- Replace blacklisted *gulp-browserify* with *browserify* and *vinyl-transform* packages (thanks for @JoeCianflone).
+- Removed default _debowerify_ transform.
