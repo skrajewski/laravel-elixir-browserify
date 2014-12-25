@@ -1,13 +1,13 @@
 var gulp = require('gulp'),
-    elixir  = require('laravel-elixir'),
-    gulpIf = require('gulp-if'),
-    browserify = require('browserify'),
-    uglify  = require('gulp-uglify'),
-    rename  = require('gulp-rename'),
-    transform = require('vinyl-transform'),
-    _  = require('underscore'),
+    elixir = require('laravel-elixir'),
     utilities = require('laravel-elixir/ingredients/helpers/Utilities'),
-    notifications = require('laravel-elixir/ingredients/helpers/Notification');
+    notifications = require('laravel-elixir/ingredients/helpers/Notification'),
+    gulpIf = require('gulp-if'),
+    uglify = require('gulp-uglify'),
+    rename = require('gulp-rename'),
+    transform = require('vinyl-transform'),
+    browserify = require('browserify'),
+    _  = require('underscore');
 
 elixir.extend('browserify', function (src, outputDir, options) {
 
@@ -17,7 +17,7 @@ elixir.extend('browserify', function (src, outputDir, options) {
             rename:        "bundle.js",
             srcDir:        config.assetsDir + 'js',
             output:        outputDir || config.jsOutput,
-            transform:     ['debowerify'],
+            transform:     [],
             insertGlobals: false,
         };
 
@@ -32,7 +32,8 @@ elixir.extend('browserify', function (src, outputDir, options) {
         };
 
         var browserified = transform(function(filename) {
-            var b = browserify(filename);
+            var b = browserify(filename, options);
+
             return b.bundle();
         });
 
@@ -45,5 +46,6 @@ elixir.extend('browserify', function (src, outputDir, options) {
     });
 
     this.registerWatcher('browserify', options.srcDir + '/**/*.js');
+
     return this.queueTask('browserify');
 });

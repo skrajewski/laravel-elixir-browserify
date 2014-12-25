@@ -17,8 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "browserify": "^7.0.3",
-    "debowerify": "^0.9.1",
+    "browserify": "^8.0.0",
     "gulp-if": "^1.2.5",
     "gulp-notify": "^2.0.0",
     "gulp-rename": "^1.2.0",
