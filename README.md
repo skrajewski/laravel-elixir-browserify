@@ -41,6 +41,8 @@ elixir(function(mix) {
 ```
 
 ## Changelog
+__0.4.1__
+- Renamed the helpers *folder* to *commands*
 
 __0.4.0__
 - Replace blacklisted *gulp-browserify* with *browserify* and *vinyl-transform* packages (thanks for @JoeCianflone).
