@@ -1,7 +1,7 @@
 ## Laravel Elixir Browserify
 
 ![Version](https://img.shields.io/npm/v/laravel-elixir-browserify.svg?style=flat-square)
-![Dependencies](https://img.shields.io/david/szykra/laravel-elixir-browserify.svg?style=flat-square)
+![Dependencies](https://img.shields.io/david/skrajewski/laravel-elixir-browserify.svg?style=flat-square)
 
 Simple extension to *laravel elixir* to build javascript bundle with *browserify*.
 
