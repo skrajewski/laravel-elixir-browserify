@@ -1,6 +1,6 @@
 {
   "name": "laravel-elixir-browserify",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Laravel Elixir Browserify Extension",
   "main": "index.js",
   "scripts": {
@@ -28,10 +28,10 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/szykra/laravel-elixir-browserify"
+    "url": "https://github.com/skrajewski/laravel-elixir-browserify"
   },
   "bugs": {
-    "url": "https://github.com/szykra/laravel-elixir-browserify/issues"
+    "url": "https://github.com/skrajewski/laravel-elixir-browserify/issues"
   },
-  "homepage": "https://github.com/szykra/laravel-elixir-browserify"
+  "homepage": "https://github.com/skrajewski/laravel-elixir-browserify"
 }

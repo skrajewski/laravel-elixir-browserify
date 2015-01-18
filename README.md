@@ -41,6 +41,9 @@ elixir(function(mix) {
 ```
 
 ## Changelog
+__0.5.0__
+- Default bundle file has the same name as input file. Use _rename_ option to change it.
+
 __0.4.1__
 - Renamed the helpers *folder* to *commands*
 
