@@ -14,7 +14,7 @@ elixir.extend('browserify', function (src, outputDir, options) {
     var config = this,
         defaultOptions = {
             debug:         ! config.production,
-            rename:        "bundle.js",
+            rename:        null,
             srcDir:        config.assetsDir + 'js',
             output:        outputDir || config.jsOutput,
             transform:     [],
@@ -40,7 +40,7 @@ elixir.extend('browserify', function (src, outputDir, options) {
         return gulp.src(src)
             .pipe(browserified).on('error', onError)
             .pipe(gulpIf(! options.debug, uglify()))
-            .pipe(rename(options.rename))
+            .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
             .pipe(gulp.dest(options.output))
             .pipe(new notifications().message('Browserified!'));
     });
