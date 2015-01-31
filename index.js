@@ -9,14 +9,14 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     _  = require('underscore');
 
-elixir.extend('browserify', function (src, outputDir, options) {
+elixir.extend('browserify', function (src, options) {
 
     var config = this,
         defaultOptions = {
             debug:         ! config.production,
             rename:        null,
             srcDir:        config.assetsDir + 'js',
-            output:        outputDir || config.jsOutput,
+            output:        config.jsOutput,
             transform:     [],
             insertGlobals: false,
         };
