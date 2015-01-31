@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     gulpIf = require('gulp-if'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
-    transform = require('vinyl-transform'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
     browserify = require('browserify'),
     _  = require('underscore');
 
@@ -22,7 +23,7 @@ elixir.extend('browserify', function (src, options) {
         };
 
     options = _.extend(defaultOptions, options);
-    src = utilities.buildGulpSrc(src, options.srcDir, '**/*.js');
+    src = "./" + utilities.buildGulpSrc(src, options.srcDir);
 
     gulp.task('browserify', function () {
 
@@ -31,14 +32,15 @@ elixir.extend('browserify', function (src, options) {
             this.emit('end');
         };
 
-        var browserified = transform(function(filename) {
+        var browserified = function(filename) {
             var b = browserify(filename, options);
-
+            
             return b.bundle();
-        });
+        };
 
-        return gulp.src(src)
-            .pipe(browserified).on('error', onError)
+        return browserified(src).on('error', onError)
+            .pipe(source(src.split("/").pop()))
+            .pipe(buffer())
             .pipe(gulpIf(! options.debug, uglify()))
             .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
             .pipe(gulp.dest(options.output))

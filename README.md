@@ -25,28 +25,35 @@ elixir(function(mix) {
 });
 ```
 
-First argument is the entry point of your application _(default directory is resources/assets/js)_. Second argument is destination directory. In third argument you could pass browserify options. Two latest parameters are optional. In production bundle will be compressed.
+First argument is the entry point of your application _(default directory is resources/assets/js)_. In second argument you could pass plugin options and browserify options.
 
 #### Advanced example
-
 ```javascript
-var elixir = require('laravel-elixir'),
-	debowerify = require('debowerify');
-
+var elixir = require('laravel-elixir');
 require('laravel-elixir-browserify');
 
 elixir(function(mix) {
-    mix.browserify("bootstrap.js", "public/js", {debug: true, insertGlobals: true, transform: [debowerify]});
+    mix.browserify("bootstrap.js", {
+    	debug: true, 
+    	insertGlobals: true, 
+    	transform: ["debowerify"],
+    	output: "public/js",
+    	rename: "bundle.js"
+    });
 });
 ```
 
 ## Changelog
+__0.6.0__
+- Removed second argument (*destination directory*) and add *output* option.
+- Fixed browserify transforms (*vinyl-transform* replaced by *vinyl-source-stream* and *vinyl-buffer*)
+
 __0.5.0__
-- Default bundle file has the same name as input file. Use _rename_ option to change it.
+- Default bundle file has the same name as input file. Use *rename* option to change it.
 
 __0.4.1__
 - Renamed the helpers *folder* to *commands*
 
 __0.4.0__
 - Replace blacklisted *gulp-browserify* with *browserify* and *vinyl-transform* packages (thanks for @JoeCianflone).
-- Removed default _debowerify_ transform.
+- Removed default *debowerify* transform.
