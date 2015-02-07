@@ -35,6 +35,9 @@ elixir.extend('browserify', function (src, options) {
         var browserified = function(filename) {
             var b = browserify(filename, options);
             
+            if(options.require) b.require(options.require);
+            if(options.external) b.external(options.external);
+            
             return b.bundle();
         };
 
