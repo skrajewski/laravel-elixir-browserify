@@ -24,34 +24,39 @@ elixir.extend('browserify', function (src, options) {
             cache: {},
             packageCache: {},
             fullPaths: true
-        };
+        }
+        hasBundler = false;
 
     options = _.extend(defaultOptions, options);
     src = "./" + utilities.buildGulpSrc(src, options.srcDir);
 
-    gulp.task('browserify', function () {
+    var onError = function(e) {
+        new notifications().error(e, 'Browserify Compilation Failed!');
+        this.emit('end');
+    };
+        
+    gulp.task('browserify', function(){
+        
+        if(!hasBundler){
+            var bundler = gulp.tasks.watch.done === true ? watchify(browserify(src, options)) : browserify(src, options);
 
-        var onError = function(e) {
-            new notifications().error(e, 'Browserify Compilation Failed!');
-            this.emit('end');
-        };
+            bundler.on('update', function(){
+                bundle(bundler);
+            });    
+        }
+        
+        return bundle(bundler);
+    });
 
-        var bundler = ! config.production ? watchify(browserify(src, options)) : browserify(src, options);
-
-        bundler.on('update', bundle);
-
-        function bundle() {
-          return bundler.bundle().on('error', onError)
+    function bundle(b) {
+        return b.bundle().on('error', onError)
             .pipe(source(src.split("/").pop()))
             .pipe(buffer())
             .pipe(gulpIf(config.production, uglify()))
             .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
             .pipe(gulp.dest(options.output))
             .pipe(new notifications().message('Browserified!'));
-        }
-
-        return bundle();
-    });
+    }
 
     this.registerWatcher('browserify', options.srcDir + '/**/*.js');
 
