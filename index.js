@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     browserify = require('browserify'),
+    watchify = require('watchify'),
     _  = require('underscore');
 
 elixir.extend('browserify', function (src, options) {
@@ -20,32 +21,43 @@ elixir.extend('browserify', function (src, options) {
             output:        config.jsOutput,
             transform:     [],
             insertGlobals: false,
-        };
+            cache: {},
+            packageCache: {},
+            fullPaths: true
+        },
+        bundler;
 
     options = _.extend(defaultOptions, options);
     src = "./" + utilities.buildGulpSrc(src, options.srcDir);
 
-    gulp.task('browserify', function () {
+    var onError = function(e) {
+        new notifications().error(e, 'Browserify Compilation Failed!');
+        this.emit('end');
+    };
+        
+    gulp.task('browserify', function(){
+    
+        if(_.isUndefined(bundler)){
 
-        var onError = function(e) {
-            new notifications().error(e, 'Browserify Compilation Failed!');
-            this.emit('end');
-        };
+            bundler = gulp.tasks.watch.done === true ? watchify(browserify(src, options)) : browserify(src, options);
 
-        var browserified = function(filename) {
-            var b = browserify(filename, options);
-            
-            return b.bundle();
-        };
+            bundler.on('update', function(){
+                bundle(bundler);
+            });
+        }
+        
+        return bundle(bundler);
+    });
 
-        return browserified(src).on('error', onError)
+    function bundle(b) {
+        return b.bundle().on('error', onError)
             .pipe(source(src.split("/").pop()))
             .pipe(buffer())
-            .pipe(gulpIf(! options.debug, uglify()))
+            .pipe(gulpIf(config.production, uglify()))
             .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
             .pipe(gulp.dest(options.output))
             .pipe(new notifications().message('Browserified!'));
-    });
+    }
 
     this.registerWatcher('browserify', options.srcDir + '/**/*.js');
 
