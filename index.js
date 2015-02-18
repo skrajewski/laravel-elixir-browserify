@@ -24,8 +24,8 @@ elixir.extend('browserify', function (src, options) {
             cache: {},
             packageCache: {},
             fullPaths: true
-        }
-        hasBundler = false;
+        },
+        bundler;
 
     options = _.extend(defaultOptions, options);
     src = "./" + utilities.buildGulpSrc(src, options.srcDir);
@@ -36,13 +36,14 @@ elixir.extend('browserify', function (src, options) {
     };
         
     gulp.task('browserify', function(){
-        
-        if(!hasBundler){
-            var bundler = gulp.tasks.watch.done === true ? watchify(browserify(src, options)) : browserify(src, options);
+    
+        if(_.isUndefined(bundler)){
+
+            bundler = gulp.tasks.watch.done === true ? watchify(browserify(src, options)) : browserify(src, options);
 
             bundler.on('update', function(){
                 bundle(bundler);
-            });    
+            });
         }
         
         return bundle(bundler);
