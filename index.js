@@ -10,44 +10,95 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     _  = require('underscore');
 
-elixir.extend('browserify', function (src, options) {
+elixir.extend('browserify', function (src, options, srcDir) {
+    var config = this;
+    srcDir = srcDir || config.assetsDir + 'js';
 
-    var config = this,
-        defaultOptions = {
-            debug:         ! config.production,
-            rename:        null,
-            srcDir:        config.assetsDir + 'js',
-            output:        config.jsOutput,
-            transform:     [],
-            insertGlobals: false,
-        };
+    var browserifyTask = function(callback) {
+        var defaultOptions = {
+                debug:         ! config.production,
+                rename:        null,
+                srcDir:        srcDir,
+                output:        config.jsOutput,
+                transform:     [],
+                insertGlobals: false,
+            };
 
-    options = _.extend(defaultOptions, options);
-    src = "./" + utilities.buildGulpSrc(src, options.srcDir);
-
-    gulp.task('browserify', function () {
+      
+        var bundleQueue;
+           
 
         var onError = function(e) {
-            new notifications().error(e, 'Browserify Compilation Failed!');
-            this.emit('end');
-        };
+                new notifications().error(e, 'Browserify Compilation Failed!');
+                this.emit('end');
+            };
 
-        var browserified = function(filename) {
-            var b = browserify(filename, options);
+        var browserifyThis = function(src, bundleConfig) {
+            var b = browserify(src, bundleConfig);
+           
             
-            return b.bundle();
+            var bundle = function() {
+
+              return b
+                .bundle()
+                // Report compile errors
+                .on('error', onError)
+                // Use vinyl-source-stream to make the
+                // stream gulp compatible. Specify the
+                // desired output filename here.
+                .pipe(source(src))
+                .pipe(buffer())
+                .pipe(gulpIf(! bundleConfig.debug, uglify()))
+                .pipe(gulpIf(typeof bundleConfig.rename === 'string', rename(bundleConfig.rename)))
+                .pipe(gulp.dest(bundleConfig.output))
+                .on('end', onFinish)
+                .pipe(new notifications().message('Browserified!'));
+              
+            };
+
+
+            // Sort out shared dependencies.
+            // b.require exposes modules externally
+            if(bundleConfig.require) b.require(bundleConfig.require);
+            // b.external excludes modules from the bundle, and expects
+            // they'll be available externally
+            if(bundleConfig.external) b.external(bundleConfig.external);
+
+            var onFinish = function() {
+                if(bundleQueue) {
+                  bundleQueue--;
+                  if(bundleQueue === 0) {
+                    // If queue is empty, tell gulp the task is complete.
+                    // https://github.com/gulpjs/gulp/blob/master/docs/API.md#accept-a-callback
+                    callback();
+                  }
+                }
+            };
+
+            return bundle();
         };
+        
+        if(Array.isArray(src)) {
+            bundleQueue = src.length;
+            _.each(src, function(conf) {
 
-        return browserified(src).on('error', onError)
-            .pipe(source(src.split("/").pop()))
-            .pipe(buffer())
-            .pipe(gulpIf(! options.debug, uglify()))
-            .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
-            .pipe(gulp.dest(options.output))
-            .pipe(new notifications().message('Browserified!'));
-    });
+                var options = _.extend(defaultOptions, _.omit(conf, 'src'));
 
-    this.registerWatcher('browserify', options.srcDir + '/**/*.js');
+                var src = "./" + utilities.buildGulpSrc(conf.src, options.srcDir);
+                browserifyThis(src, options);
+            });
+        } else {
+            
+            options = _.extend(defaultOptions, options);
+            src = "./" + utilities.buildGulpSrc(src, options.srcDir);
+            browserifyThis(src, options);
+        }
+    };
+
+    gulp.task('browserify', browserifyTask);
+   
+
+    this.registerWatcher('browserify', srcDir + '/**/*.js');
 
     return this.queueTask('browserify');
 });
