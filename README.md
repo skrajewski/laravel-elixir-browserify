@@ -42,6 +42,17 @@ elixir(function(mix) {
     });
 });
 ```
+#### Watchify
+```javascript
+var elixir = require('laravel-elixir');
+require('laravel-elixir-browserify');
+
+elixir(function(mix) {
+    mix.browserify("bootstrap.js")
+        .watchify();
+});
+```
+**Note** instead of running the `watch` task, you will now run `watchify`. Elixir's watch task is a dependency of watchify and will also be run.
 
 ## Changelog
 __0.6.0__
