@@ -51,7 +51,6 @@ elixir.extend('browserify', function (src, options) {
             b = watchify(b);
 
             b.on('update', function() {
-                console.log('bundling');
                 bundle(b);
             });
         }
