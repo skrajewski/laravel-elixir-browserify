@@ -12,9 +12,14 @@ var gulp = require('gulp'),
     watchify = require('watchify'),
     _  = require('underscore');
 
+function snake_case(file) {
+    return 'browserify_' + file.split('.')[0].split('/').join('_');
+}
+
 elixir.extend('browserify', function (src, options) {
 
     var config = this,
+        taskName = snake_case(src),
         defaultOptions = {
             debug:         ! config.production,
             rename:        null,
@@ -27,7 +32,7 @@ elixir.extend('browserify', function (src, options) {
     options = _.extend(defaultOptions, options);
     src = "./" + utilities.buildGulpSrc(src, options.srcDir);
 
-    gulp.task('browserify', function () {
+    gulp.task(taskName, function () {
 
         var onError = function(e) {
             new notifications().error(e, 'Browserify Compilation Failed!');
@@ -51,7 +56,6 @@ elixir.extend('browserify', function (src, options) {
             b = watchify(b);
 
             b.on('update', function() {
-                console.log('bundling');
                 bundle(b);
             });
         }
@@ -59,9 +63,9 @@ elixir.extend('browserify', function (src, options) {
         return bundle(b);
     });
 
-    this.registerWatcher('browserify', options.srcDir + '/**/*.js', config.watchify ? 'nowatch' : 'default');
+    this.registerWatcher(taskName, options.srcDir + '/**/*.js', config.watchify ? 'nowatch' : 'default');
 
-    return this.queueTask('browserify');
+    return this.queueTask(taskName);
 });
 
 elixir.extend('watchify', function(src, options) {
@@ -75,7 +79,7 @@ elixir.extend('watchify', function(src, options) {
         tasksToRun = _.intersection(config.tasks, _.keys(srcPaths).concat('copy'));
         config.watchify = true;
 
-        inSequence.apply(this, ['browserify']);
+        inSequence.apply(this, tasksToRun);
     });
 
     return this.queueTask('watchify');
