@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     elixir = require('laravel-elixir'),
+    inSequence = require('run-sequence'),
     utilities = require('laravel-elixir/ingredients/commands/Utilities'),
     notifications = require('laravel-elixir/ingredients/commands/Notification'),
     gulpIf = require('gulp-if'),
@@ -8,6 +9,7 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     browserify = require('browserify'),
+    watchify = require('watchify'),
     _  = require('underscore');
 
 elixir.extend('browserify', function (src, options) {
@@ -19,7 +21,7 @@ elixir.extend('browserify', function (src, options) {
             srcDir:        config.assetsDir + 'js',
             output:        config.jsOutput,
             transform:     [],
-            insertGlobals: false,
+            insertGlobals: false
         };
 
     options = _.extend(defaultOptions, options);
@@ -32,22 +34,48 @@ elixir.extend('browserify', function (src, options) {
             this.emit('end');
         };
 
-        var browserified = function(filename) {
-            var b = browserify(filename, options);
-            
-            return b.bundle();
-        };
+        var bundle = function(b) {
+            return b.bundle()
+                .on('error', onError)
+                .pipe(source(src.split("/").pop()))
+                .pipe(buffer())
+                .pipe(gulpIf(!options.debug, uglify()))
+                .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
+                .pipe(gulp.dest(options.output))
+                .pipe(new notifications().message('Browserified!'));
+        }
 
-        return browserified(src).on('error', onError)
-            .pipe(source(src.split("/").pop()))
-            .pipe(buffer())
-            .pipe(gulpIf(! options.debug, uglify()))
-            .pipe(gulpIf(typeof options.rename === 'string', rename(options.rename)))
-            .pipe(gulp.dest(options.output))
-            .pipe(new notifications().message('Browserified!'));
+        var b = browserify(src, options);
+
+        if (config.watchify) {
+            b = watchify(b);
+
+            b.on('update', function() {
+                bundle(b);
+            });
+        }
+
+        return bundle(b);
     });
 
-    this.registerWatcher('browserify', options.srcDir + '/**/*.js');
+    this.registerWatcher('browserify', options.srcDir + '/**/*.js', config.watchify ? 'nowatch' : 'default');
 
     return this.queueTask('browserify');
 });
+
+elixir.extend('watchify', function(src, options) {
+
+    var config = this,
+        srcPaths,
+        tasksToRun;
+
+    gulp.task('watchify', ['watch'], function() {
+        srcPaths = config.watchers.nowatch;
+        tasksToRun = _.intersection(config.tasks, _.keys(srcPaths).concat('copy'));
+        config.watchify = true;
+
+        inSequence.apply(this, ['browserify']);
+    });
+
+    return this.queueTask('watchify');
+})
