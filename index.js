@@ -83,7 +83,7 @@ elixir.extend('browserify', function (src, options) {
 
     this.registerWatcher('browserify', options.srcDir + '/**/*.js', config.watchify ? 'nowatch' : 'default');
 
-    return config.queueTask('browserify');
+    return this.queueTask('browserify');
 });
 
 /**
