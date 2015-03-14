@@ -42,6 +42,7 @@ elixir(function(mix) {
     });
 });
 ```
+
 #### Watchify
 ```javascript
 var elixir = require('laravel-elixir');
@@ -52,9 +53,27 @@ elixir(function(mix) {
         .watchify();
 });
 ```
-**Note** instead of running the `watch` task, you will now run `watchify`. Elixir's watch task is a dependency of watchify and will also be run.
+
+**Note:** 
+instead of running the `watch` task, you will now run `watchify`. Elixir's watch task is a dependency of watchify and will also be run.
+
+### Multiple bundles
+```javascript
+var elixir = require('laravel-elixir');
+require('laravel-elixir-browserify');
+
+elixir(function(mix) {
+    mix.browserify("admin.js")
+        .browserify("app.js", { transform: ["reactify"] })
+        .watchify();
+});
+```
 
 ## Changelog
+__0.7.0__
+- Added multiple bundles support (thanks for @Daveawb)
+- Added watchify support (thanks for @Daveawb)
+
 __0.6.0__
 - Removed second argument (*destination directory*) and add *output* option.
 - Fixed browserify transforms (*vinyl-transform* replaced by *vinyl-source-stream* and *vinyl-buffer*)
@@ -68,3 +87,6 @@ __0.4.1__
 __0.4.0__
 - Replace blacklisted *gulp-browserify* with *browserify* and *vinyl-transform* packages (thanks for @JoeCianflone).
 - Removed default *debowerify* transform.
+
+## License
+The MIT License. Copyright (c) 2015 by Szymon Krajewski and many contributors.
