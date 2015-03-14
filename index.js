@@ -21,8 +21,7 @@ var gulp = require('gulp'),
 var buildTask = function() {
     var stream;
 
-    gulp.task('browserify', function(callback) {
-
+    gulp.task('browserify', function() {
         var onError = function(e) {
             new notifications().error(e, 'Browserify Compilation Failed!');
             this.emit('end');
@@ -37,7 +36,7 @@ var buildTask = function() {
                 .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
                 .pipe(gulp.dest(instance.options.output))
                 .pipe(new notifications().message('Browserified!'));
-        }
+        };
 
         config.toBrowserify.forEach(function(instance) {
             var b = browserify(instance.src, instance.options);
@@ -55,15 +54,15 @@ var buildTask = function() {
 
         return stream;
     });
-}
+};
 
 /**
  * Create elixir extension
  */
 elixir.extend('browserify', function (src, options) {
-
-    if (!_.isArray(config.toBrowserify))
+    if (!_.isArray(config.toBrowserify)) {
         config.toBrowserify = [];
+    }
 
     options = _.extend({
         debug:         ! config.production,
@@ -89,8 +88,7 @@ elixir.extend('browserify', function (src, options) {
 /**
  * Create elixir extension for Watchify command
  */
-elixir.extend('watchify', function(src, options) {
-
+elixir.extend('watchify', function() {
     var config = this;
 
     gulp.task('watchify', ['watch'], function() {
@@ -100,4 +98,4 @@ elixir.extend('watchify', function(src, options) {
     });
 
     return this.queueTask('watchify');
-})
+});
