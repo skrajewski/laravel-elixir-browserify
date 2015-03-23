@@ -25,7 +25,7 @@
     "underscore": "^1.7.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "~2.4.0",
+    "watchify": "~2.6.0",
     "run-sequence": "~1.0.2"
   },
   "devDependencies": {},
