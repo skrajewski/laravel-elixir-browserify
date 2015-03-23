@@ -41,7 +41,7 @@ var buildTask = function() {
         config.toBrowserify.forEach(function(instance) {
             var b = browserify(instance.src, instance.options);
 
-            if (config.watchify) {
+            if (config.useWatchify) {
                 b = watchify(b);
 
                 b.on('update', function() {
@@ -80,22 +80,19 @@ elixir.extend('browserify', function (src, options) {
 
     buildTask();
 
-    this.registerWatcher('browserify', options.srcDir + '/**/*.js', config.watchify ? 'nowatch' : 'default');
+    this.registerWatcher('browserify', options.srcDir + '/**/*.js', config.useWatchify ? 'nowatch' : 'default');
 
     return this.queueTask('browserify');
 });
 
 /**
- * Create elixir extension for Watchify command
+ * Watching changes with watchify
  */
-elixir.extend('watchify', function() {
-    var config = this;
+gulp.task('watchify', function() {
+    config.useWatchify = true;
 
-    gulp.task('watchify', ['watch'], function() {
-        config.watchify = true;
+    srcPaths = config.watchers.default;
+    tasksToRun = _.intersection(config.tasks, _.keys(srcPaths).concat('copy'));
 
-        inSequence.apply(this, ['browserify']);
-    });
-
-    return this.queueTask('watchify');
+    inSequence.apply(this, tasksToRun.concat('watch-assets'));
 });
