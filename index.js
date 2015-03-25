@@ -84,7 +84,9 @@ elixir.extend('browserify', function (src, options) {
 
     buildTask();
 
-    this.registerWatcher('browserify', function() {
+    // Use null instead of browserify so gulp doesn't
+    // compile each bundle twice on start.
+    this.registerWatcher(null, function() {
         return createBundle(true);
     });
 
