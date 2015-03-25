@@ -14,37 +14,39 @@ var gulp = require('gulp'),
     _  = require('underscore');
 
 var createBundle = function(watch) {
-  var onError = function(e) {
-      new notifications().error(e, 'Browserify Compilation Failed!');
-      this.emit('end');
-  };
+    var stream;
+    var notification = new notifications();
+    var onError = function(e) {
+        notification.error(e, 'Browserify Compilation Failed!');
+        this.emit('end');
+    };
 
-  var bundle = function(b, instance) {
-      return b.bundle()
-          .on('error', onError)
-          .pipe(source(instance.src.split("/").pop()))
-          .pipe(buffer())
-          .pipe(gulpIf(!instance.options.debug, uglify()))
-          .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
-          .pipe(gulp.dest(instance.options.output))
-          .pipe(new notifications().message('Browserified!'));
-  };
+    var bundle = function(b, instance) {
+        return b.bundle()
+            .on('error', onError)
+            .pipe(source(instance.src.split("/").pop()))
+            .pipe(buffer())
+            .pipe(gulpIf(!instance.options.debug, uglify()))
+            .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
+            .pipe(gulp.dest(instance.options.output))
+            .pipe(notification.message('Browserified!'));
+    };
 
-  config.toBrowserify.forEach(function(instance) {
-      var b = browserify(instance.src, instance.options);
+    config.toBrowserify.forEach(function(instance) {
+        var b = browserify(instance.src, instance.options);
 
-      if (watch) {
-          b = watchify(b);
+        if (watch) {
+            b = watchify(b);
 
-          b.on('update', function() {
-              bundle(b, instance);
-          });
-      }
+            b.on('update', function() {
+                bundle(b, instance);
+            });
+        }
 
-      stream = bundle(b, instance);
-  });
+        stream = bundle(b, instance);
+    });
 
-  return stream;
+    return stream;
 };
 
 /**
@@ -53,8 +55,6 @@ var createBundle = function(watch) {
  * @return {void}
  */
 var buildTask = function() {
-    var stream;
-
     gulp.task('browserify', function() {
         return createBundle(false);
     });
@@ -85,23 +85,8 @@ elixir.extend('browserify', function (src, options) {
     buildTask();
 
     this.registerWatcher('browserify', function() {
-      return createBundle(true);
+        return createBundle(true);
     });
 
     return this.queueTask('browserify');
-});
-
-/**
- * Create elixir extension for Watchify command
- */
-elixir.extend('watchify', function() {
-    var config = this;
-
-    gulp.task('watchify', ['watch'], function() {
-        config.watchify = true;
-
-        inSequence.apply(this, ['browserify']);
-    });
-
-    return this.queueTask('watchify');
 });
