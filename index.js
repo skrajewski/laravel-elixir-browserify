@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     utilities = require('laravel-elixir/ingredients/commands/Utilities'),
     notifications = require('laravel-elixir/ingredients/commands/Notification'),
     gulpIf = require('gulp-if'),
+    sourcemaps = require('gulp-sourcemaps'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     source = require('vinyl-source-stream'),
@@ -26,7 +27,9 @@ var createBundle = function(watch) {
             .on('error', onError)
             .pipe(source(instance.src.split("/").pop()))
             .pipe(buffer())
+            .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(gulpIf(!instance.options.debug, uglify()))
+            .pipe(sourcemaps.write('./'))
             .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
             .pipe(gulp.dest(instance.options.output))
             .pipe(notification.message('Browserified!'));

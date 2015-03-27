@@ -21,12 +21,13 @@
     "gulp-if": "^1.2.5",
     "gulp-notify": "^2.0.0",
     "gulp-rename": "^1.2.0",
+    "gulp-sourcemaps": "^1.5.1",
     "gulp-uglify": "^1.0.1",
+    "run-sequence": "~1.0.2",
     "underscore": "^1.7.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "~2.4.0",
-    "run-sequence": "~1.0.2"
+    "watchify": "~2.4.0"
   },
   "devDependencies": {},
   "repository": {
