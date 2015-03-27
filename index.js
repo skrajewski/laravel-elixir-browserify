@@ -12,7 +12,8 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     browserify = require('browserify'),
     watchify = require('watchify'),
-    _  = require('underscore');
+    _  = require('underscore'),
+    path = require('path');
 
 var createBundle = function(watch) {
     var stream;
@@ -25,7 +26,7 @@ var createBundle = function(watch) {
     var bundle = function(b, instance) {
         return b.bundle()
             .on('error', onError)
-            .pipe(source(instance.src.split("/").pop()))
+            .pipe(source(path.basename(instance.src)))
             .pipe(buffer())
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(gulpIf(!instance.options.debug, uglify()))
