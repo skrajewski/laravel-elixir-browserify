@@ -28,10 +28,10 @@ var createBundle = function(watch) {
             .on('error', onError)
             .pipe(source(path.basename(instance.src)))
             .pipe(buffer())
-            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(gulpIf(instance.options.debug, sourcemaps.init({ loadMaps: true })))
             .pipe(gulpIf(!instance.options.debug, uglify()))
-            .pipe(sourcemaps.write('./'))
             .pipe(gulpIf(_.isString(instance.options.rename), rename(instance.options.rename)))
+            .pipe(gulpIf(instance.options.debug, sourcemaps.write('./')))
             .pipe(gulp.dest(instance.options.output))
             .pipe(notification.message('Browserified!'));
     };
