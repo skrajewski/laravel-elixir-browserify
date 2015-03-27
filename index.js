@@ -31,7 +31,7 @@ var createBundle = function(watch) {
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(gulpIf(!instance.options.debug, uglify()))
             .pipe(sourcemaps.write('./'))
-            .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
+            .pipe(gulpIf(_.isString(instance.options.rename), rename(instance.options.rename)))
             .pipe(gulp.dest(instance.options.output))
             .pipe(notification.message('Browserified!'));
     };
