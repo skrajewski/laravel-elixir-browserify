@@ -1,6 +1,6 @@
 {
   "name": "laravel-elixir-browserify",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Laravel Elixir Browserify Extension",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "laravel",
     "elixir",
     "browserify",
+    "watchify",
     "gulp"
   ],
   "author": {
@@ -25,8 +26,8 @@
     "underscore": "^1.7.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "~2.6.0",
-    "run-sequence": "~1.0.2"
+    "watchify": "~3.2.0",
+    "run-sequence": "~1.1.0"
   },
   "devDependencies": {},
   "repository": {
