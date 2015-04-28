@@ -4,7 +4,7 @@ Laravel Elixir Browserify
 ![Version](https://img.shields.io/npm/v/laravel-elixir-browserify.svg?style=flat-square)
 ![Dependencies](https://img.shields.io/david/skrajewski/laravel-elixir-browserify.svg?style=flat-square)
 
-Highly customizable __browserify__ extension for _laravel elixir_. Includes support for transforms, __watchify__ and __multiple budnles__.
+Highly customizable __browserify__ extension for _laravel elixir_. Includes support for transforms, __watchify__ and __multiple bundles__.
 
 - [Install](#install)
 - [Usage](#usage)
