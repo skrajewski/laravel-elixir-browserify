@@ -1,6 +1,6 @@
 {
   "name": "laravel-elixir-browserify",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Laravel Elixir Browserify Extension",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "browserify": "^9.0.0",
+    "browserify": "^10.1.0",
     "gulp-if": "^1.2.5",
     "gulp-notify": "^2.0.0",
     "gulp-rename": "^1.2.0",

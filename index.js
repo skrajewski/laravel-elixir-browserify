@@ -18,8 +18,6 @@ var initializePlugin = function(taskName) {
 
     /**
      * Create the Gulp task.
-     *
-     * @return {void}
      */
     var buildTask = function() {
         var stream;
@@ -100,7 +98,6 @@ var initializePlugin = function(taskName) {
         inSequence.apply(this, tasksToRun.concat('watch-assets'));
     });
 };
-
 
 module.exports = {
     init: initializePlugin
