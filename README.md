@@ -99,6 +99,9 @@ elixir(function(mix) {
 ```
 
 ## Changelog
+__0.8.1__
+- Updated _browserify_
+
 __0.8.0__
 - Resolved conflicts with _browserify_ elixir task
 - Better watchify integration
