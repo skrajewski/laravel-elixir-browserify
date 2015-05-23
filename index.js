@@ -35,8 +35,7 @@ var initializePlugin = function(taskName) {
                     .pipe(buffer())
                     .pipe(gulpIf(!instance.options.debug, uglify()))
                     .pipe(gulpIf(typeof instance.options.rename === 'string', rename(instance.options.rename)))
-                    .pipe(gulp.dest(instance.options.output))
-                    .pipe(new notifications().message('Browserified!'));
+                    .pipe(gulp.dest(instance.options.output));
             };
 
             config.toBrowserify.forEach(function(instance) {
@@ -53,7 +52,7 @@ var initializePlugin = function(taskName) {
                 stream = bundle(b, instance);
             });
 
-            return stream;
+            return stream.pipe(new notifications().message('Browserified!'));;
         });
     };
 
