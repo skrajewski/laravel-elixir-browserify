@@ -2,8 +2,7 @@ var gulp = require('gulp'),
     elixir = require('laravel-elixir'),
     config = elixir.config,
     inSequence = require('run-sequence'),
-    utilities = require('laravel-elixir/ingredients/commands/Utilities'),
-    notifications = require('laravel-elixir/ingredients/commands/Notification'),
+    notifications = require('laravel-elixir/Notification'),
     gulpIf = require('gulp-if'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
@@ -15,6 +14,21 @@ var gulp = require('gulp'),
 
 var initializePlugin = function(taskName) {
     taskName = taskName || "browserify";
+
+    /**
+     * Build up the given src file(s), to be passed to Gulp.
+     *
+     * @param {string|array} src
+     * @param {string}       baseDir
+     * @param {string}       search
+     */
+    var buildGulpSrc = function(src, baseDir, search) {
+        if (src) {
+            return prefixDirToFiles(baseDir, src);
+        }
+
+        return [baseDir + '/' + search];
+    };
 
     /**
      * Create the Gulp task.
@@ -74,7 +88,7 @@ var initializePlugin = function(taskName) {
         }, options);
 
         config.toBrowserify.push({
-            src : "./" + utilities.buildGulpSrc(src, options.srcDir),
+            src : "./" + buildGulpSrc(src, options.srcDir),
             options: options
         });
 
