@@ -6,6 +6,9 @@ Laravel Elixir Browserify
 
 Highly customizable __browserify__ extension for _laravel elixir_. Includes support for transforms, __watchify__ and __multiple bundles__.
 
+## IMPORTANT NOTE
+Work to this package was abadonded. No further updates will be perfomed. Consider use the [official package](https://www.npmjs.com/package/laravel-elixir-browserify-official). Thanks for all contributors for their support.
+
 - [Install](#install)
 - [Usage](#usage)
 	- [Example *Gulpfile.js*:](#example-gulpfilejs)
@@ -125,4 +128,4 @@ __0.4.0__
 - Removed default *debowerify* transform.
 
 ## License
-The MIT License. Copyright (c) 2015 by Szymon Krajewski and many contributors.
+The MIT License. Copyright (c) 2015 - 2017 by Szymon Krajewski and many contributors.
